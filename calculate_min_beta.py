@@ -2,12 +2,11 @@ import numpy as np
 import pandas as pd
 import math
 
-## This is used to generate the table of the minimal beta value for the data recovery in DAS
+## This is used to generate the table of the minimal beta_1 value for the data recovery in DAS
 
 # Given values
 alpha = 1/8
 gamma = 1/8
-ln2 = np.log(2)
 c = 8192
 
 # Function to calculate Kullback-Leibler Divergence
@@ -32,10 +31,9 @@ for k in k_values:
     D_value = kullback_leibler_divergence(alpha, gamma_k)
     H_value = entropy(gamma)
     
-    # Solve for beta from the inequality
-    # -D_value * beta + ln(2) * H_value <= -0.011
-    # Rearranged: beta >= (ln(2) * H_value + 0.011) / D_value
-    beta_min = (ln2 * H_value + 0.011) / D_value
+    # Solve for beta_1 from the inequality
+    # beta_1 >= (H_value + 0.011) / D_value
+    beta_min = (H_value + 0.011) / D_value
     results.append([k, round_up_third_decimal(beta_min), math.ceil(beta_min*c)])
 
 # Create DataFrame
