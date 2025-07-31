@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import math
 
-## This is used to generate the table of the minimal beta_1 value for the data recovery in DAS
+## This is used to generate the table of the minimal m value for the data recovery in DAS
 
 # Given values
 gamma = 1/8
@@ -16,12 +16,9 @@ def kullback_leibler_divergence(alpha, gamma_k):
 def entropy(gamma):
     return -gamma * np.log(gamma) - (1 - gamma) * np.log(1 - gamma)
 
-def round_up_third_decimal(x):
-    return math.ceil(x * 1000) / 1000
-
 # Given values for k
-k_values = [8]
-alpha_values = [1/8, 1/6, 1/4, 1/3]
+k_values = [4, 5, 6, 7, 8, 12, 16, 20, 24]
+alpha_values = [1/8]
 
 # Calculate results for each k
 results = []
@@ -32,12 +29,12 @@ for alpha in alpha_values:
         D_value = kullback_leibler_divergence(alpha, gamma_k)
         H_value = entropy(gamma)
         
-        # Solve for beta_1 from the inequality
-        # beta_1 >= (H_value + 0.011) / D_value
-        beta_min = (H_value + 0.011) / D_value
-        results.append([alpha, k, round_up_third_decimal(beta_min), math.ceil(beta_min*c)])
+        # Solve for m from the inequality
+        # m >= (c * H_value + 88.73) / D_value
+        m_min = (c * H_value + 88.73) / D_value
+        results.append([alpha, k, math.ceil(m_min)])
 
 # Create DataFrame
-df = pd.DataFrame(results, columns=["Alpha", "k", "Minimal Beta", "beta * c"])
+df = pd.DataFrame(results, columns=["Alpha", "k", "min m"])
 
 print(df)
